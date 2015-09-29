@@ -12,6 +12,8 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.Arrays;
+
 public class QuizActivity extends AppCompatActivity {
 
     private Button mTrueButton;
@@ -24,6 +26,7 @@ public class QuizActivity extends AppCompatActivity {
     private static final String TAG = "QuizActivity";
     private static final String KEY_INDEX = "index";
     private static final String KEY_CHEATER = "cheater";
+    private static final String KEY_CHEAT_BANK = "CheatBank";
 
     private TrueFalse[] mQuestionBank = new TrueFalse[] {
             new TrueFalse(R.string.question_oceans, true),
@@ -32,6 +35,8 @@ public class QuizActivity extends AppCompatActivity {
             new TrueFalse(R.string.question_americas, true),
             new TrueFalse(R.string.question_asia, true),
     };
+
+    private boolean[] mCheatBank = new boolean[5];
 
     private int mCurrentIndex = 0;
 
@@ -85,7 +90,7 @@ public class QuizActivity extends AppCompatActivity {
 
         int messageResId = 0;
 
-        if (mIsCheater) {
+        if (mIsCheater || mCheatBank[mCurrentIndex]) {
             messageResId = R.string.judgment_toast;
         } else {
             if (userPressedTrue == answerIsTrue) {
@@ -107,6 +112,7 @@ public class QuizActivity extends AppCompatActivity {
         if (savedInstanceState != null) {
             mCurrentIndex = savedInstanceState.getInt(KEY_INDEX, 0);
             mIsCheater = savedInstanceState.getBoolean(KEY_CHEATER);
+            mCheatBank = savedInstanceState.getBooleanArray(KEY_CHEAT_BANK);
         }
 
         mQuestionTextView = (TextView)findViewById(R.id.question_text_view);
@@ -140,6 +146,7 @@ public class QuizActivity extends AppCompatActivity {
         mCheatButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mCheatBank[mCurrentIndex] = true;
                 Intent i = new Intent(QuizActivity.this, CheatActivity.class);
                 boolean answerIsTrue = mQuestionBank[mCurrentIndex].isTrueQuestion();
                 i.putExtra(CheatActivity.EXTRA_ANSWER_IS_TRUE, answerIsTrue);
@@ -184,6 +191,7 @@ public class QuizActivity extends AppCompatActivity {
         Log.i(TAG, "onSaveInstanceState");
         savedInstanceState.putInt(KEY_INDEX, mCurrentIndex);
         savedInstanceState.putBoolean(KEY_CHEATER, mIsCheater);
+        savedInstanceState.putBooleanArray(KEY_CHEAT_BANK, mCheatBank);
     }
 
     @Override

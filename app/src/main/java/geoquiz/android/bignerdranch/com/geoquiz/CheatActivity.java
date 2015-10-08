@@ -3,6 +3,7 @@ package geoquiz.android.bignerdranch.com.geoquiz;
 import android.app.Activity;
 import android.content.Intent;
 import android.nfc.Tag;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -21,6 +22,7 @@ public class CheatActivity extends Activity{
     private boolean mAnswerShown;
 
     private TextView mAnswerTextView;
+    private TextView mAPITextView;
     private Button mShowAnswer;
 
     private static final String TAG = "CheatActivity";
@@ -40,6 +42,9 @@ public class CheatActivity extends Activity{
         mAnswerIsTrue = getIntent().getBooleanExtra(EXTRA_ANSWER_IS_TRUE, false);
 
         mAnswerTextView = (TextView)findViewById(R.id.answerTextView);
+
+        mAPITextView = (TextView)findViewById(R.id.apiLevel);
+        mAPITextView.setText("API level "+ String.valueOf(Build.VERSION.SDK_INT));
 
         setAnswerShownResult(false);
         mAnswerShown = false;
